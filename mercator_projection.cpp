@@ -5,7 +5,7 @@ using namespace std;
 
 
 
-//æµ‹è¯•ä¸»å‡½æ•°ï¼š
+//²âÊÔÖ÷º¯Êı£º
 int main()
 {
 	MercatorProj m_mp;
@@ -15,10 +15,10 @@ int main()
 	b0 = 30;
 	l0 = 0;
 
-	latS = 60;//æµ‹è¯•æ•°æ®ï¼Œçº¬åº¦60åº¦
-	lgtS = 120;//æµ‹è¯•æ•°æ®ï¼Œç»åº¦120åº¦
-	double a = 6378137;//é•¿åŠè½´
-	double b = 6356752.3142;//çŸ­åŠè½´
+	latS = 60;//²âÊÔÊı¾İ£¬Î³¶È60¶È
+	lgtS = 120;//²âÊÔÊı¾İ£¬¾­¶È120¶È
+	double a = 6378137;//³¤°ëÖá
+	double b = 6356752.3142;//¶Ì°ëÖá
 	m_mp.SetAB(a, b); // WGS 84
 	m_mp.SetB0(DegreeToRad(b0));
 	m_mp.SetL0(DegreeToRad(l0));
@@ -28,8 +28,8 @@ int main()
 	cout << "X="<<latD << "\t" <<"Y="<< lgtD << endl;
 	// 7248377.351067:11578353.630128
 
-	latS = 123456;//æµ‹è¯•æ•°æ®
-	lgtS = 654321;//æµ‹è¯•æ•°æ®
+	latS = 123456;
+	lgtS = 654321;
 
 	m_mp.FromProj(latS, lgtS, latD, lgtD);
 	latD = RadToDegree(latD);

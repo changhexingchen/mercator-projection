@@ -1,14 +1,14 @@
 #pragma once
 #include<cmath>
 
-//åœ†å‘¨ç‡
+//Ô²ÖÜÂÊ
 const double PI = 3.1415926535897932;
-//è§’åº¦åˆ°å¼§åº¦çš„è½¬æ¢
+//½Ç¶Èµ½»¡¶ÈµÄ×ª»»
 double DegreeToRad(double degree)
 {
 	return PI*((double)degree / (double)180);
 }
-//å¼§åº¦åˆ°è§’åº¦çš„è½¬æ¢
+//»¡¶Èµ½½Ç¶ÈµÄ×ª»»
 double RadToDegree(double rad)
 {
 	return (180 * rad) / PI;
@@ -28,22 +28,22 @@ public:
 	~MercatorProj();
 
 private:
-	int __IterativeTimes;      //åå‘è½¬æ¢ç¨‹åºä¸­çš„è¿­ä»£æ¬¡æ•°
-	double __IterativeValue;  //åå‘è½¬æ¢ç¨‹åºä¸­çš„è¿­ä»£åˆå§‹å€¼
-	double __A;    //æ¤­çƒä½“é•¿åŠè½´,ç±³
-	double __B;    //æ¤­çƒä½“çŸ­åŠè½´,ç±³
-	double __B0; //æ ‡å‡†çº¬åº¦,å¼§åº¦
-	double __L0; //åŸç‚¹ç»åº¦,å¼§åº¦
+	int __IterativeTimes;      //·´Ïò×ª»»³ÌĞòÖĞµÄµü´ú´ÎÊı
+	double __IterativeValue;  //·´Ïò×ª»»³ÌĞòÖĞµÄµü´ú³õÊ¼Öµ
+	double __A;    //ÍÖÇòÌå³¤°ëÖá,Ã×
+	double __B;    //ÍÖÇòÌå¶Ì°ëÖá,Ã×
+	double __B0; //±ê×¼Î³¶È,»¡¶È
+	double __L0; //Ô­µã¾­¶È,»¡¶È
 
 };
 
 
-//æ„é€ å‡½æ•°ä¸­èµ‹äºˆå‚æ•°é»˜è®¤å€¼
+//¹¹Ôìº¯ÊıÖĞ¸³Óè²ÎÊıÄ¬ÈÏÖµ
 MercatorProj::MercatorProj() :__IterativeTimes(10), __IterativeValue(0), __A(0), __B(0),__B0(0), __L0(0)
 {
 }
-//è®¾å®š__Aä¸__B
-void MercatorProj::SetAB(double& a, double& b)//åŸç¨‹åºçš„å‚æ•°å†™ä½œdouble a, double b
+//Éè¶¨__AÓë__B
+void MercatorProj::SetAB(double& a, double& b)//Ô­³ÌĞòµÄ²ÎÊıĞ´×÷double a, double b
 {
 	if (a <= 0 || b <= 0)
 	{
@@ -52,36 +52,36 @@ void MercatorProj::SetAB(double& a, double& b)//åŸç¨‹åºçš„å‚æ•°å†™ä½œdouble a
 	__A = a;
 	__B = b;
 }
-//è®¾å®š__B0
+//Éè¶¨__B0
 void MercatorProj::SetB0(double b0)
 {
 	if (b0<-PI / 2 || b0>PI / 2)
 	{
 		return;
 	}
-	__B0 = b0;//è®¾å®šæ ‡å‡†çº¬åº¦ï¼Œæ ‡å‡†çº¬åº¦çº¿å’ŒåŸç‚¹ç»åº¦çº¿çš„äº¤ç‚¹ç»„æˆäº†æŠ•å½±åçš„å¹³é¢åæ ‡çš„åŸç‚¹
+	__B0 = b0;//Éè¶¨±ê×¼Î³¶È£¬±ê×¼Î³¶ÈÏßºÍÔ­µã¾­¶ÈÏßµÄ½»µã×é³ÉÁËÍ¶Ó°ºóµÄÆ½Ãæ×ø±êµÄÔ­µã
 }
-//è®¾å®š__L0
+//Éè¶¨__L0
 void MercatorProj::SetL0(double l0)
 {
 	if (l0<-PI || l0>PI)
 	{
 		return;
 	}
-	__L0 = l0;//è®¾å®šåŸç‚¹ç»åº¦
+	__L0 = l0;//Éè¶¨Ô­µã¾­¶È
 }
 
 
 /*******************************************
-æŠ•å½±æ­£å‘è½¬æ¢ç¨‹åº
-double B: ç»´åº¦,å¼§åº¦
-double L: ç»åº¦,å¼§åº¦
-double& X:     çºµå‘ç›´è§’åæ ‡
-double& Y:      æ¨ªå‘ç›´è§’åæ ‡
+Í¶Ó°ÕıÏò×ª»»³ÌĞò
+double B: Î¬¶È,»¡¶È
+double L: ¾­¶È,»¡¶È
+double& X:     ×İÏòÖ±½Ç×ø±ê
+double& Y:      ºáÏòÖ±½Ç×ø±ê
 *******************************************/
 int MercatorProj::ToProj(double B, double L, double &X, double &Y)
 {
-	double f/*æ‰ç‡*/, e/*ç¬¬ä¸€åå¿ƒç‡*/, e_/*ç¬¬äºŒåå¿ƒç‡*/, NB0/*å¯é…‰åœˆæ›²ç‡åŠå¾„*/, K, dtemp;
+	double f/*±âÂÊ*/, e/*µÚÒ»Æ«ĞÄÂÊ*/, e_/*µÚ¶şÆ«ĞÄÂÊ*/, NB0/*Ã®ÓÏÈ¦ÇúÂÊ°ë¾¶*/, K, dtemp;
 	double E = exp(1);
 	if (L<-PI || L>PI || B<-PI / 2 || B>PI / 2)
 	{
@@ -109,9 +109,9 @@ int MercatorProj::ToProj(double B, double L, double &X, double &Y)
 	}
 	e_ = sqrt(dtemp);
 
-	NB0 = ((__A*__A) / __B) / sqrt(1 + e_*e_*cos(__B0)*cos(__B0)); //NB0=N, æ³•çº¿é•¿ï¼ˆã€Šå¤§åœ°æµ‹é‡å­¦åŸºç¡€ã€‹ç¬¬äºŒç‰ˆç¬¬103é¡µï¼Œæˆ–109ã€110é¡µï¼‰
+	NB0 = ((__A*__A) / __B) / sqrt(1 + e_*e_*cos(__B0)*cos(__B0)); //NB0=N, ·¨Ïß³¤£¨¡¶´óµØ²âÁ¿Ñ§»ù´¡¡·µÚ¶ş°æµÚ103Ò³£¬»ò109¡¢110Ò³£©
 
-	K = NB0*cos(__B0);//å¹³è¡ŒåœˆåŠå¾„
+	K = NB0*cos(__B0);//Æ½ĞĞÈ¦°ë¾¶
 
 	Y = K*(L - __L0);
 
@@ -120,15 +120,15 @@ int MercatorProj::ToProj(double B, double L, double &X, double &Y)
 	return 0;
 }
 /*******************************************
-æŠ•å½±åå‘è½¬æ¢ç¨‹åº
-double X: çºµå‘ç›´è§’åæ ‡
-double Y: æ¨ªå‘ç›´è§’åæ ‡
-double& B:     ç»´åº¦,å¼§åº¦
-double& L:     ç»åº¦,å¼§åº¦
+Í¶Ó°·´Ïò×ª»»³ÌĞò
+double X: ×İÏòÖ±½Ç×ø±ê
+double Y: ºáÏòÖ±½Ç×ø±ê
+double& B:     Î¬¶È,»¡¶È
+double& L:     ¾­¶È,»¡¶È
 *******************************************/
 int MercatorProj::FromProj(double X, double Y, double& B, double& L)
 {
-	double f/*æ‰ç‡*/, e/*ç¬¬ä¸€åå¿ƒç‡*/, e_/*ç¬¬äºŒåå¿ƒç‡*/, NB0/*å¯é…‰åœˆæ›²ç‡åŠå¾„*/, K, dtemp;
+	double f/*±âÂÊ*/, e/*µÚÒ»Æ«ĞÄÂÊ*/, e_/*µÚ¶şÆ«ĞÄÂÊ*/, NB0/*Ã®ÓÏÈ¦ÇúÂÊ°ë¾¶*/, K, dtemp;
 	double E = exp(1);
 
 	if (__A <= 0 || __B <= 0)
